@@ -1,23 +1,115 @@
 aid: abcoffee
 name: Abcoffee
-description: 'Abcoffee is a company surfaced via the API Evangelist harvest backlog (source: secondary-market)
-  and added to the network as a stub for full-pipeline profiling.'
+description: >-
+  abcoffee (abCoffee, legally AB Coffee India) is a Mumbai-founded, tech-enabled grab-and-go specialty
+  coffee chain operating 90+ kiosk, high-street and corporate outlets across Mumbai, Delhi-NCR and
+  Bengaluru. Founded in 2022 by Abhijeet Anand, the company sources beans directly from Indian growing
+  regions such as Chikmagalur and sells through its own takeaway mobile app and subscription ecosystem
+  alongside its stores. Its public machine-readable surface is not a developer API program but an
+  agentic-commerce one - the abcoffee.in storefront runs on Shopify and publishes an llms.txt/agents.md
+  agent instruction document, a Universal Commerce Protocol (UCP) merchant profile at /.well-known/ucp,
+  OpenID Connect and OAuth 2.0 discovery metadata for Shopify Customer Accounts, and a live,
+  anonymously-listable MCP endpoint at /api/ucp/mcp exposing 13 catalog, cart, checkout and order tools.
 url: https://raw.githubusercontent.com/api-evangelist/abcoffee/refs/heads/main/apis.yml
+image: https://abcoffee.in/cdn/shop/t/24/assets/favicon-512.png
 x-type: company
 x-source: harvest:secondary-market
-x-tier: stub
-x-tier-reason: harvest
 specificationVersion: '0.20'
 created: '2026-09-05'
 modified: '2026-09-05'
 tags:
 - Company
-apis: []
+- Coffee
+- Food and Beverage
+- Retail
+- Commerce
+- Agentic Commerce
+- MCP
+- Universal Commerce Protocol
+- Shopify
+- India
+- Subscriptions
+apis:
+- name: abcoffee Agentic Commerce (UCP over MCP)
+  description: >-
+    The agent-facing commerce surface of the abcoffee online store. Implemented as Shopify's native
+    Universal Commerce Protocol (UCP) service and exposed over MCP at abcoffee's own domain, it offers
+    13 tools covering catalog search and lookup, product detail, cart create/update/cancel, checkout
+    create/update/complete/cancel and order retrieval. tools/list and initialize answer anonymously;
+    order retrieval requires a Shopify agent JWT and checkout completion requires a buyer-approved
+    payment plus a required idempotency key.
+  humanURL: https://abcoffee.in/agents.md
+  image: https://abcoffee.in/cdn/shop/t/24/assets/favicon-512.png
+  baseURL: https://abcoffee.in/api/ucp/mcp
+  position: Producing
+  tags:
+  - Commerce
+  - Agentic Commerce
+  - MCP
+  - Universal Commerce Protocol
+  - Catalog
+  - Checkout
+  properties:
+  - type: MCPServer
+    url: mcp/abcoffee-mcp.yml
+  - type: LLMsTxt
+    url: llms/abcoffee-llms.txt
+  - type: Documentation
+    url: https://abcoffee.in/agents.md
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: Packages
+  url: packages/abcoffee-packages.yml
+- type: DomainSecurity
+  url: security/abcoffee-domain-security.yml
 - type: Website
-  url: https://equityzen.com/company/abcoffee
+  url: https://abcoffee.in
+- type: Documentation
+  url: https://abcoffee.in/agents.md
+- type: LLMsTxt
+  url: llms/abcoffee-llms.txt
+- type: MCPServer
+  url: mcp/abcoffee-mcp.yml
+- type: WellKnown
+  url: well-known/abcoffee-well-known.yml
+- type: Authentication
+  url: authentication/abcoffee-authentication.yml
+- type: OAuthScopes
+  url: scopes/abcoffee-scopes.yml
+- type: Conformance
+  url: conformance/abcoffee-conformance.yml
+- type: Conventions
+  url: conventions/abcoffee-conventions.yml
+- type: Idempotency
+  url: conventions/abcoffee-conventions.yml
+- type: ErrorCatalog
+  url: errors/abcoffee-problem-types.yml
+- type: Lifecycle
+  url: lifecycle/abcoffee-lifecycle.yml
+- type: DataModel
+  url: data-model/abcoffee-data-model.yml
+- type: RateLimits
+  url: rate-limits/abcoffee-rate-limits.yml
+- type: Plans
+  url: plans/abcoffee-plans-pricing.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: Support
+  url: https://abcoffee.in/pages/contact
+- type: Blog
+  url: https://abcoffee.in/blogs/news
+- type: SignUp
+  url: https://abcoffee.in/account/login
+- type: TermsOfService
+  url: https://abcoffee.in/policies/terms-of-service
+- type: PrivacyPolicy
+  url: https://abcoffee.in/policies/privacy-policy
+x-enrichment:
+  date: '2026-09-05'
+  status: enriched
+  artifacts_added: 23
+  pass: local-v3

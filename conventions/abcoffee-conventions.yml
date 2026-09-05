@@ -1,0 +1,131 @@
+generated: '2026-09-05'
+method: probed
+source: >-
+  live tools/list + tools/call probes of https://abcoffee.in/api/ucp/mcp,
+  https://abcoffee.in/llms.txt, https://abcoffee.in/.well-known/ucp,
+  https://abcoffee.in/policies/refund-policy
+note: >-
+  abcoffee publishes no OpenAPI. Everything below is read from the live MCP tool schemas, the observed
+  error envelopes, the UCP merchant profile, the published agent instructions (llms.txt / agents.md)
+  and the store's own refund policy.
+protocol:
+  style: JSON-RPC 2.0 over HTTP POST (MCP)
+  endpoint: https://abcoffee.in/api/ucp/mcp
+  content_type: application/json
+  accept: application/json, text/event-stream
+  discovery: https://abcoffee.in/.well-known/ucp
+authentication:
+  style: >-
+    Anonymous for initialize / tools/list and for catalog and cart/checkout tools; a Shopify agent JWT
+    (Authorization bearer) is required for get_order. Every tool additionally requires an agent
+    identity in meta["ucp-agent"].profile.
+  see: authentication/abcoffee-authentication.yml
+idempotency:
+  supported: true
+  coverage: partial
+  scope:
+  - complete_checkout
+  mechanism: >-
+    complete_checkout requires meta["idempotency-key"] (declared in its inputSchema "required" list) -
+    an idempotency key for completing the checkout. It is the only tool in the 13-tool surface that
+    declares an idempotency key; the other four mutating tools (create_cart, update_cart,
+    create_checkout, update_checkout) and the two cancel tools declare none.
+  header: null
+  parameter: meta.idempotency-key
+  retention: not documented
+  evidence: >-
+    mcp/abcoffee-mcp-tools.json - complete_checkout.inputSchema.properties.meta.required includes
+    "idempotency-key"; no other tool schema contains the string "idempot".
+  mutating_operations_total: 7
+  mutating_operations_covered: 1
+reversibility:
+  grade: verified
+  summary: >-
+    The checkout surface is reversible before completion and the order surface has a stated, very
+    short free-cancellation window afterwards.
+  operations:
+  - write_operation: create_checkout / update_checkout
+    reversal_operation: cancel_checkout
+    window: before complete_checkout is called; a checkout that has not been completed can be cancelled at any time
+    window_source: >-
+      derived from the tool set - cancel_checkout takes only a checkout id and complete_checkout is the
+      commit step; the docs do not state an expiry for an uncompleted checkout
+    docs: https://abcoffee.in/agents.md
+  - write_operation: create_cart / update_cart
+    reversal_operation: cancel_cart
+    window: any time before checkout completion
+    window_source: derived from the tool set (cancel_cart takes only a cart id)
+    docs: https://abcoffee.in/agents.md
+  - write_operation: complete_checkout (places the order)
+    reversal_operation: order cancellation via abCoffee customer care
+    window: >-
+      one minute - the published refund policy states that cancelling more than one minute after
+      placing the order gives abCoffee the right to charge 100% of the order amount as a cancellation
+      fee. There is no MCP tool for cancelling a completed order; the only order tool is get_order.
+    window_source: https://abcoffee.in/policies/refund-policy
+    docs: https://abcoffee.in/policies/refund-policy
+    note: >-
+      Refund settlement timelines are also published per payment method (UPI 2-4 business days,
+      cards 4-7 business days, net banking 5-7 business days, PayTM/Freecharge/Mobikwik and LazyPay
+      wallets 1 hour).
+dry_run_mode:
+  supported: false
+  note: >-
+    No test mode, sandbox store or dry-run flag is published. create_checkout against the live store is
+    the only rehearsal available, which is why cancel_checkout matters.
+pagination:
+  style: cursor
+  applies_to: [search_catalog]
+  request_field: catalog.pagination.cursor
+  response_field: pagination.cursor
+  evidence: >-
+    search_catalog description - "Results are paginated, with initial results limited to improve
+    experience. Use the pagination.cursor from the response to fetch additional pages."
+buyer_context:
+  description: >-
+    Catalog and checkout tools accept a context object carrying buyer signals used for localization,
+    pricing and availability.
+  fields: [address_country, address_region, postal_code, language, currency, intent]
+  platform_signals: ['dev.ucp.buyer_ip', 'dev.ucp.user_agent']
+  guidance: >-
+    llms.txt instructs agents to pass context.address_country and context.currency for accurate pricing
+    and availability.
+money:
+  representation: >-
+    Integer minor units paired with an ISO 4217 currency code - {"amount": 600, "currency": "USD"} is
+    $6.00. Every tool description repeats this and instructs the agent to convert before quoting a
+    price to a buyer.
+identifiers:
+  style: Shopify global ids (GID)
+  examples:
+  - 'gid://shopify/Checkout/abc123'
+  - 'gid://shopify/Order/123'
+request_tracing:
+  header: x-request-id
+  note: >-
+    Storefront responses carry x-request-id (and Shopify server-timing requestID); the MCP endpoint does
+    not document a client-supplied correlation id beyond meta["idempotency-key"].
+versioning:
+  scheme: date-based protocol versions negotiated through the UCP merchant profile
+  current: '2026-08-25'
+  supported: ['2026-08-25', '2026-04-08', '2026-01-23']
+  see: lifecycle/abcoffee-lifecycle.yml
+error_envelope:
+  shape: JSON-RPC 2.0 error object
+  fields: [code, message, data]
+  see: errors/abcoffee-problem-types.yml
+rate_limit_signaling:
+  documented: true
+  headers: []
+  status_on_exhaustion: 429
+  note: >-
+    llms.txt states "The MCP endpoint is rate-limited per IP. Back off on 429 responses." No numeric
+    limit and no RateLimit-*/Retry-After header contract is published.
+  see: rate-limits/abcoffee-rate-limits.yml
+human_approval:
+  required: true
+  rule: >-
+    "Checkout requires human approval. Agents must not complete payment without explicit buyer
+    consent." Where contemporaneous buyer approval is not possible, llms.txt directs the agent to route
+    the purchase through Shop Pay via the Shop skill (https://shop.app/SKILL.md).
+  source: https://abcoffee.in/llms.txt

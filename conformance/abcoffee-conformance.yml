@@ -1,0 +1,89 @@
+generated: '2026-09-05'
+method: probed
+source: >-
+  https://abcoffee.in/.well-known/ucp, https://abcoffee.in/.well-known/openid-configuration,
+  https://abcoffee.in/.well-known/oauth-protected-resource, https://abcoffee.in/api/ucp/mcp,
+  https://abcoffee.in/llms.txt
+standards:
+- id: ucp
+  name: Universal Commerce Protocol
+  conforms: true
+  version: '2026-08-25'
+  evidence: >-
+    /.well-known/ucp returns a UCP merchant profile declaring ucp.version 2026-08-25 plus supported
+    versions 2026-04-08 and 2026-01-23, the dev.ucp.shopping service over MCP transport, and the
+    capabilities dev.ucp.shopping.cart / .checkout / .fulfillment / .discount / .order /
+    .catalog.search / .catalog.lookup.
+  domain_standard: true
+  market: retail-commerce
+  spec: https://ucp.dev/2026-08-25/specification/overview/
+- id: mcp
+  name: Model Context Protocol
+  conforms: true
+  version: '2024-11-05'
+  evidence: >-
+    initialize returns protocolVersion 2024-11-05 with serverInfo {name universal-commerce,
+    version 0.1.0} and capabilities tools/prompts/resources/logging; tools/list returns 13 tools with
+    JSON Schema 2020-12 inputSchemas.
+- id: json-schema-2020-12
+  conforms: true
+  evidence: >-
+    Every MCP tool inputSchema declares $schema https://json-schema.org/draft/2020-12/schema.
+- id: jsonrpc-2.0
+  conforms: true
+  evidence: MCP endpoint speaks JSON-RPC 2.0; errors observed as -32000 and -32001 envelopes.
+- id: oidc-discovery
+  name: OpenID Connect Discovery 1.0
+  conforms: true
+  evidence: /.well-known/openid-configuration returns issuer, jwks_uri, authorization/token endpoints, RS256.
+- id: oauth2
+  conforms: true
+  evidence: authorization_code + refresh_token + jwt-bearer grants advertised, PKCE S256 supported.
+- id: rfc8414-oauth-authorization-server-metadata
+  conforms: true
+  evidence: /.well-known/oauth-authorization-server returns RFC 8414 metadata (HTTP 200).
+- id: rfc9728-oauth-protected-resource-metadata
+  conforms: true
+  evidence: >-
+    /.well-known/oauth-protected-resource returns {"resource":"https://abcoffee.in",
+    "authorization_servers":["https://shopify.com/authentication/54968025206"],
+    "bearer_methods_supported":["header"]}.
+- id: llms-txt
+  conforms: true
+  evidence: https://abcoffee.in/llms.txt returns text/markdown 200; mirrored at /agents.md and listed in sitemap_agentic_discovery.xml.
+- id: iso-4217-minor-units
+  conforms: true
+  evidence: >-
+    Every MCP tool description states prices are integers in ISO 4217 minor units paired with a
+    currency code.
+- id: iso-3166-1-alpha-2
+  conforms: true
+  evidence: catalog/checkout address_country fields specify ISO 3166-1 alpha-2.
+- id: bcp47
+  conforms: true
+  evidence: catalog search context.language specifies IETF BCP 47 language tags.
+- id: rfc9457-problem-details
+  conforms: false
+  evidence: errors are JSON-RPC error objects, not application/problem+json.
+- id: rfc9116-security-txt
+  conforms: false
+  evidence: /.well-known/security.txt returned 404 on abcoffee.in, www.abcoffee.in and app.abcoffee.in.
+- id: openapi
+  conforms: false
+  evidence: >-
+    No OpenAPI/Swagger document found on abcoffee.in, www.abcoffee.in or app.abcoffee.in
+    (/openapi.json, /swagger.json, /swagger/v1/swagger.json, /api-docs all 404).
+- id: a2a
+  conforms: false
+  evidence: /.well-known/agent-card.json and /.well-known/agent.json returned 404 on every host probed.
+- id: apis-json
+  conforms: false
+  evidence: /apis.json and /.well-known/apis.json returned 404.
+- id: aauth
+  conforms: false
+  evidence: /.well-known/aauth-resource.json returned 404.
+compliance_program:
+  published: false
+  note: >-
+    No trust center, certification page or compliance statement found - trust.abcoffee.in and
+    security.abcoffee.in do not resolve, and probe-security-programs.py recorded trust=none.

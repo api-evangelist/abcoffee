@@ -1,0 +1,41 @@
+generated: '2026-09-05'
+method: probed
+source: https://abcoffee.in/.well-known/ucp, https://abcoffee.in/api/ucp/mcp, https://abcoffee.in/llms.txt
+versioning:
+  scheme: date-based protocol version, negotiated via the UCP merchant profile
+  current: '2026-08-25'
+  supported:
+  - version: '2026-08-25'
+    status: current
+    profile: https://abcoffee.in/.well-known/ucp
+  - version: '2026-04-08'
+    status: supported
+    profile: https://abcoffeeeindia.myshopify.com/.well-known/ucp/2026-04-08
+  - version: '2026-01-23'
+    status: supported
+    profile: https://abcoffeeeindia.myshopify.com/.well-known/ucp/2026-01-23
+  mcp_protocol_version: '2024-11-05'
+  docs: https://abcoffee.in/agents.md
+  note: >-
+    Version negotiation is a property of the protocol the store implements rather than of a versioning
+    policy abcoffee itself publishes. Older UCP versions are still served, at the myshopify origin.
+deprecation:
+  policy_url: null
+  sunset_header: false
+  note: >-
+    No deprecation or sunset policy is published by abcoffee. Older UCP versions remain reachable but
+    no retirement schedule is stated anywhere on the store's own surface.
+sla:
+  url: null
+  uptime_target: null
+status_page:
+  url: null
+  note: >-
+    No status page found. status.abcoffee.in does not resolve and no status link appears on the
+    storefront, agents.md or llms.txt.
+changelog:
+  url: null
+  note: >-
+    No dated changelog for the commerce surface. https://abcoffee.in/blogs/news is a marketing blog,
+    not a release log.
+deprecated_operations: []

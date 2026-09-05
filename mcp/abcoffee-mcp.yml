@@ -1,0 +1,182 @@
+generated: '2026-09-05'
+method: probed
+source: https://abcoffee.in/api/ucp/mcp
+status: published
+note: Live, unauthenticated MCP endpoint served at abcoffee's own domain. tools/list returned HTTP 200
+  with 13 tools and full JSON Schema 2020-12 inputSchemas, saved verbatim to mcp/abcoffee-mcp-tools.json.
+  The server is Shopify's native Universal Commerce Protocol (UCP) implementation deployed on the abcoffee
+  storefront - serverInfo reports name 'universal-commerce', version 0.1.0 - and the UCP merchant profile
+  at /.well-known/ucp identifies the merchant as abcoffee (merchant_origin abcoffee.in, Shopify shop id
+  54968025206), so the surface belongs to this company even though the protocol implementation is platform-provided.
+deployment:
+  mode: remote
+  endpoint: https://abcoffee.in/api/ucp/mcp
+  auth: none
+  verified: probed
+  note: Anonymous tools/list and initialize both return 200. Catalog tools (search_catalog, lookup_catalog,
+    get_product) and the cart/checkout tools are callable with a UCP agent profile in meta['ucp-agent'].
+    get_order returns JSON-RPC -32000 AuthenticationRequired (HTTP 403) and requires a Shopify agent JWT.
+    The UCP profile also advertises an equivalent endpoint at https://abcoffeeeindia.myshopify.com/api/ucp/mcp.
+server:
+  name: universal-commerce
+  version: 0.1.0
+  transport: http
+  url: https://abcoffee.in/api/ucp/mcp
+  protocol_version: '2024-11-05'
+  capabilities:
+  - tools.listChanged
+  - prompts.listChanged
+  - resources.listChanged
+  - logging
+  discovery: https://abcoffee.in/.well-known/ucp
+  raw_tools_list: mcp/abcoffee-mcp-tools.json
+ucp:
+  version: '2026-08-25'
+  supported_versions:
+  - '2026-08-25'
+  - '2026-04-08'
+  - '2026-01-23'
+  services:
+  - dev.ucp.shopping
+  capabilities:
+  - dev.ucp.shopping.checkout
+  - dev.ucp.shopping.fulfillment
+  - dev.ucp.shopping.discount
+  - dev.ucp.shopping.cart
+  - dev.ucp.shopping.order
+  - dev.ucp.shopping.catalog.search
+  - dev.ucp.shopping.catalog.lookup
+  - dev.shopify.catalog
+  payment_handlers:
+  - com.google.pay
+  - dev.shopify.card
+  spec: https://ucp.dev/2026-08-25/specification/overview/
+tool_count: 13
+tools:
+- name: get_checkout
+  description: Returns details about the checkout, including line items, totals, and any applicable discounts
+    or taxes.
+  input_schema_properties:
+  - meta
+  - id
+  required:
+  - meta
+  - id
+  source: live tools/list on https://abcoffee.in/api/ucp/mcp
+- name: create_checkout
+  description: Creates a checkout. Returns checkout details, including line items, totals, and any applicable
+    discounts or taxes.
+  input_schema_properties:
+  - meta
+  - checkout
+  required:
+  - meta
+  - checkout
+  source: live tools/list on https://abcoffee.in/api/ucp/mcp
+- name: update_checkout
+  description: Updates a checkout. Returns checkout details, including line items, totals, and any applicable
+    discounts or taxes.
+  input_schema_properties:
+  - meta
+  - checkout
+  - id
+  required:
+  - meta
+  - checkout
+  - id
+  source: live tools/list on https://abcoffee.in/api/ucp/mcp
+- name: complete_checkout
+  description: Completes a checkout and returns the checkout result. Returns details about the completed
+    checkout, including order ID, Thank You Page URL, or any errors encountered.
+  input_schema_properties:
+  - meta
+  - checkout
+  - id
+  required:
+  - meta
+  - id
+  - checkout
+  source: live tools/list on https://abcoffee.in/api/ucp/mcp
+- name: cancel_checkout
+  description: Cancels a checkout.
+  input_schema_properties:
+  - meta
+  - id
+  required:
+  - meta
+  - id
+  source: live tools/list on https://abcoffee.in/api/ucp/mcp
+- name: get_cart
+  description: Get the cart contents
+  input_schema_properties:
+  - meta
+  - id
+  required:
+  - meta
+  - id
+  source: live tools/list on https://abcoffee.in/api/ucp/mcp
+- name: create_cart
+  description: Creates a new cart
+  input_schema_properties:
+  - meta
+  - cart
+  required:
+  - meta
+  - cart
+  source: live tools/list on https://abcoffee.in/api/ucp/mcp
+- name: update_cart
+  description: Perform updates to a cart.
+  input_schema_properties:
+  - meta
+  - cart
+  - id
+  required:
+  - meta
+  - cart
+  - id
+  source: live tools/list on https://abcoffee.in/api/ucp/mcp
+- name: cancel_cart
+  description: Cancels a cart.
+  input_schema_properties:
+  - meta
+  - id
+  required:
+  - meta
+  - id
+  source: live tools/list on https://abcoffee.in/api/ucp/mcp
+- name: get_order
+  description: Get the details of an order
+  input_schema_properties:
+  - meta
+  - id
+  required:
+  - meta
+  - id
+  source: live tools/list on https://abcoffee.in/api/ucp/mcp
+- name: search_catalog
+  description: Search for products from the online store, hosted on Shopify.
+  input_schema_properties:
+  - meta
+  - catalog
+  required:
+  - meta
+  - catalog
+  source: live tools/list on https://abcoffee.in/api/ucp/mcp
+- name: lookup_catalog
+  description: Look up multiple products or variants by identifier.
+  input_schema_properties:
+  - meta
+  - catalog
+  required:
+  - meta
+  - catalog
+  source: live tools/list on https://abcoffee.in/api/ucp/mcp
+- name: get_product
+  description: Retrieve complete product detail by identifier. Returns a singular product
+  input_schema_properties:
+  - meta
+  - catalog
+  required:
+  - meta
+  - catalog
+  source: live tools/list on https://abcoffee.in/api/ucp/mcp

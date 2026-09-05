@@ -1,0 +1,82 @@
+generated: '2026-09-05'
+method: probed
+source: https://abcoffee.in/.well-known/
+note: >-
+  abcoffee.in is a Shopify-hosted storefront. The discovery documents below are served from
+  abcoffee's own registrable domain and describe abcoffee's own store (UCP merchant profile
+  names merchant "abcoffee", merchant_origin abcoffee.in, myshopify domain
+  abcoffeeeindia.myshopify.com, Shopify shop id 54968025206). The OAuth/OIDC issuer is
+  Shopify's Customer Account platform because the store's identity provider is hosted by
+  Shopify on abcoffee's behalf — the documents are still published at abcoffee's host.
+  www.abcoffee.in serves llms.txt but 404s every /.well-known/ path; the apex is the host
+  that carries the discovery surface.
+path_echo_control: passed
+hit_count: 5
+hosts:
+  - host: https://abcoffee.in
+    documents:
+      - path: /.well-known/security.txt
+        status: 404
+      - path: /.well-known/openid-configuration
+        status: 200
+        file: abcoffee-openid-configuration.json
+      - path: /.well-known/oauth-authorization-server
+        status: 200
+        file: abcoffee-oauth-authorization-server.json
+      - path: /.well-known/oauth-protected-resource
+        status: 200
+        file: abcoffee-oauth-protected-resource.json
+      - path: /.well-known/ucp
+        status: 200
+        file: abcoffee-ucp.json
+      - path: /.well-known/ucp.json
+        status: 200
+        file: abcoffee-ucp.json
+      - path: /.well-known/api-catalog
+        status: 404
+      - path: /.well-known/ai-plugin.json
+        status: 404
+      - path: /.well-known/acp.json
+        status: 404
+      - path: /.well-known/aauth-resource.json
+        status: 404
+      - path: /.well-known/agent-card.json
+        status: 404
+      - path: /.well-known/agent.json
+        status: 404
+      - path: /.well-known/apis.json
+        status: 404
+      - path: /apis.json
+        status: 404
+      - path: /.well-known/abcoffee-negative-control-7f3ab91c.json
+        status: 404
+  - host: https://www.abcoffee.in
+    documents:
+      - path: /.well-known/security.txt
+        status: 404
+      - path: /.well-known/openid-configuration
+        status: 404
+      - path: /.well-known/oauth-authorization-server
+        status: 404
+      - path: /.well-known/api-catalog
+        status: 404
+      - path: /.well-known/ai-plugin.json
+        status: 404
+      - path: /.well-known/agent-card.json
+        status: 404
+      - path: /.well-known/agent.json
+        status: 404
+      - path: /.well-known/apis.json
+        status: 404
+      - path: /.well-known/abcoffee-negative-control-7f3ab91c.json
+        status: 404
+  - host: https://app.abcoffee.in
+    documents:
+      - path: /.well-known/security.txt
+        status: 404
+      - path: /.well-known/agent-card.json
+        status: 404
+      - path: /.well-known/agent.json
+        status: 404
+      - path: /.well-known/abcoffee-negative-control-7f3ab91c.json
+        status: 404

@@ -1,0 +1,22 @@
+generated: '2026-09-05'
+method: searched
+source: >-
+  registry.npmjs.org, pypi.org, rubygems.org, crates.io, plus the abcoffee storefront, agents.md and
+  llms.txt
+package_count: 0
+official_sdk_count: 0
+note: >-
+  abcoffee ships no client libraries. The exact-name lookups registry.npmjs.org/abcoffee,
+  pypi.org/pypi/abcoffee/json, rubygems.org/api/v1/gems/abcoffee.json and
+  crates.io/api/v1/crates/abcoffee all returned 404, and an npm text search for "abcoffee" returned
+  zero packages. No SDK, CLI or GitHub organization is linked from the storefront, agents.md or
+  llms.txt. This is expected: the agent surface is a standard-protocol endpoint (UCP over MCP), so a
+  caller uses a generic MCP client rather than a vendor SDK. Recorded as a checked absence, not an
+  unchecked gap.
+packages: []
+evidence:
+- {url: 'https://registry.npmjs.org/abcoffee', status: 404}
+- {url: 'https://pypi.org/pypi/abcoffee/json', status: 404}
+- {url: 'https://rubygems.org/api/v1/gems/abcoffee.json', status: 404}
+- {url: 'https://crates.io/api/v1/crates/abcoffee', status: 404}
+- {url: 'https://registry.npmjs.org/-/v1/search?text=abcoffee', status: 200, result: 'zero packages'}

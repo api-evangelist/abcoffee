@@ -1,0 +1,61 @@
+generated: '2026-09-05'
+method: probed
+source: >-
+  https://abcoffee.in/.well-known/openid-configuration,
+  https://abcoffee.in/.well-known/oauth-authorization-server,
+  https://abcoffee.in/.well-known/oauth-protected-resource,
+  live MCP probes of https://abcoffee.in/api/ucp/mcp
+note: >-
+  Derived from discovery documents fetched from abcoffee's own host, not from an OpenAPI - abcoffee
+  publishes no OpenAPI. The authorization server is Shopify's Customer Account platform
+  (issuer https://shopify.com/authentication/54968025206), which is the identity provider Shopify
+  hosts for this store; the RFC 9728 protected-resource document served at abcoffee.in names
+  abcoffee.in as the resource and that issuer as its authorization server.
+summary:
+  types: [oauth2, openIdConnect, http]
+  api_key_in: []
+  oauth2_flows: [authorizationCode]
+  anonymous_surface: true
+schemes:
+- name: shopify-customer-account-oidc
+  type: openIdConnect
+  openIdConnectUrl: https://abcoffee.in/.well-known/openid-configuration
+  issuer: https://shopify.com/authentication/54968025206
+  authorizationUrl: https://shopify.com/authentication/54968025206/oauth/authorize
+  tokenUrl: https://shopify.com/authentication/54968025206/oauth/token
+  end_session_endpoint: https://shopify.com/authentication/54968025206/logout
+  jwks_uri: https://shopify.com/authentication/54968025206/.well-known/jwks.json
+  grant_types: [authorization_code, refresh_token, 'urn:ietf:params:oauth:grant-type:jwt-bearer']
+  response_types: [code]
+  pkce: [S256]
+  id_token_signing_alg: [RS256]
+  token_endpoint_auth_methods: [client_secret_basic, client_secret_post]
+  sources: [well-known/abcoffee-openid-configuration.json]
+- name: shopify-agent-jwt
+  type: http
+  scheme: bearer
+  bearerFormat: JWT
+  applies_to:
+  - 'mcp:get_order'
+  evidence: >-
+    A tools/call for get_order without a token returns JSON-RPC error -32000 "AuthenticationRequired"
+    with HTTP 403 and the message "Unauthorized: A valid JWT is required to call get_order. See
+    https://shopify.dev/docs/agents/get-started/authentication".
+  docs: https://shopify.dev/docs/agents/get-started/authentication
+  sources: ['probe: POST https://abcoffee.in/api/ucp/mcp tools/call get_order']
+- name: ucp-agent-profile
+  type: other
+  description: >-
+    Every MCP tool requires meta["ucp-agent"].profile - a URI pointing at the calling agent's UCP
+    profile. It is an agent-identity requirement rather than an authorization credential; omitting it
+    returns JSON-RPC -32001 "UCP discovery failed" / invalid_profile_url with HTTP 422.
+  sources: [mcp/abcoffee-mcp-tools.json]
+anonymous_access:
+  description: >-
+    MCP initialize and tools/list are callable with no credential at all (HTTP 200). The read-only
+    storefront surface documented in llms.txt (/products/{handle}.json,
+    /collections/{handle}/products.json, /search) is also unauthenticated.
+  evidence:
+  - {url: 'https://abcoffee.in/api/ucp/mcp', method: 'tools/list', status: 200}
+  - {url: 'https://abcoffee.in/api/ucp/mcp', method: 'initialize', status: 200}
+  - {url: 'https://abcoffee.in/products.json', status: 200}

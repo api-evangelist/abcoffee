@@ -1,0 +1,24 @@
+generated: '2026-09-05'
+method: searched
+source: https://abcoffee.in/llms.txt
+limit_count: 0
+note: >-
+  abcoffee documents that a rate limit exists but publishes no number, no window and no header
+  contract. llms.txt (mirrored at /agents.md) states only "Respect rate limits. The MCP endpoint is
+  rate-limited per IP. Back off on 429 responses." No RateLimit-*, X-RateLimit-* or Retry-After header
+  was observed on any of the anonymous MCP responses probed (initialize, tools/list, two error paths),
+  so an agent's only runtime signal is the status code itself.
+limits: []
+signaling:
+  scope: per-ip
+  surface: https://abcoffee.in/api/ucp/mcp
+  status_on_exhaustion: 429
+  headers_observed: []
+  retry_after: not documented
+  guidance: exponential back-off on 429, per the published agent instructions
+evidence:
+- url: https://abcoffee.in/llms.txt
+  status: 200
+- url: https://abcoffee.in/api/ucp/mcp
+  status: 200
+  note: 'tools/list response carried no rate-limit headers'

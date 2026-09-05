@@ -1,0 +1,19 @@
+generated: '2026-09-05'
+method: searched
+source: https://abcoffee.in/llms.txt, https://abcoffee.in/.well-known/ucp, https://abcoffee.in/pages/our-menu
+plan_count: 0
+note: >-
+  abcoffee publishes no API plans, tiers or developer pricing of any kind. The agent surface is the
+  store's own commerce endpoint: catalog and cart/checkout tools are callable anonymously at no charge,
+  and the only thing that costs money is buying coffee. There is no developer portal, no signup for API
+  access, and no metered or paid tier. The consumer-facing prices that do exist - the menu at
+  /pages/our-menu and the abCircle subscription cards at /pages/subscription-cards - are product
+  pricing for beverages, not API plans, and are deliberately not recorded here as such.
+plans: []
+evidence:
+- url: https://abcoffee.in/llms.txt
+  status: 200
+- url: https://abcoffee.in/.well-known/ucp
+  status: 200
+- url: https://abcoffee.in/pages/our-menu
+  status: 200

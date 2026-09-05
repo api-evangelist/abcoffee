@@ -1,0 +1,121 @@
+generated: '2026-09-05'
+method: derived
+source: mcp/abcoffee-mcp-tools.json
+note: >-
+  Derived from the JSON Schema 2020-12 inputSchemas returned by a live tools/list on
+  https://abcoffee.in/api/ucp/mcp. abcoffee publishes no OpenAPI, so there are no $ref graphs to walk;
+  entities and relationships below are read from the tool request shapes and the Shopify GID formats
+  the descriptions state. Response schemas are not published, so only request-side structure is modelled.
+identifier_scheme:
+  style: Shopify global id (GID)
+  patterns:
+  - entity: Checkout
+    example: 'gid://shopify/Checkout/abc123'
+  - entity: Order
+    example: 'gid://shopify/Order/123'
+entities:
+- name: Product
+  description: A catalogue item in the abcoffee online store.
+  operations: [search_catalog, lookup_catalog, get_product]
+  fields: [id, 'selected[].name', 'selected[].label', preferences]
+- name: Cart
+  description: A pre-checkout collection of line items with buyer, context, fulfillment and discount state.
+  operations: [create_cart, get_cart, update_cart, cancel_cart]
+  fields: ['line_items[]', buyer, context, attribution, fulfillment, discounts]
+- name: LineItem
+  description: A quantity of one catalogue item inside a cart or checkout.
+  fields: [id, quantity, item.id]
+- name: Checkout
+  description: >-
+    A cart promoted to a purchasable state - carries payment instruments, fulfillment selection and
+    discount codes, and is the object complete_checkout commits.
+  operations: [create_checkout, get_checkout, update_checkout, complete_checkout, cancel_checkout]
+  fields: ['payment.instruments[]', 'line_items[]', buyer, context, attribution, cart_id, fulfillment, discounts]
+- name: Order
+  description: The record produced by completing a checkout.
+  operations: [get_order]
+  fields: [id]
+  access: requires a Shopify agent JWT
+- name: Buyer
+  description: Contact identity attached to a cart or checkout.
+  fields: [email, phone_number]
+- name: PaymentInstrument
+  description: >-
+    A tokenized payment credential attached to a checkout, produced by one of the store's payment
+    handlers (com.google.pay or dev.shopify.card).
+  fields: [id, handler_id, type, billing_address, credential, display, selected]
+- name: Address
+  description: Billing or shipping address.
+  fields: [street_address, extended_address, address_locality, address_region, postal_code, address_country, first_name, last_name, phone_number]
+- name: FulfillmentMethod
+  description: A shipping selection over a subset of line items, with destinations and groups.
+  fields: [type, line_item_ids, selected_destination_id, destinations, groups]
+- name: Discount
+  description: Discount codes applied to a cart or checkout.
+  fields: [codes]
+- name: BuyerContext
+  description: Localization and personalization signals used for pricing and availability.
+  fields: [address_country, address_region, postal_code, language, currency, intent, eligibility]
+- name: Attribution
+  description: Marketing attribution carried on a cart or checkout.
+  fields: [referring_domain, click_id_tag, click_id_value, activity_id_tag, activity_id_value, utm_campaign, utm_source, utm_medium, utm_content, utm_term]
+relationships:
+- from: Cart
+  to: LineItem
+  kind: has_many
+  via: line_items
+- from: LineItem
+  to: Product
+  kind: belongs_to
+  via: item.id
+- from: Checkout
+  to: Cart
+  kind: belongs_to
+  via: cart_id
+- from: Checkout
+  to: LineItem
+  kind: has_many
+  via: line_items
+- from: Checkout
+  to: PaymentInstrument
+  kind: has_many
+  via: payment.instruments
+- from: PaymentInstrument
+  to: Address
+  kind: has_one
+  via: billing_address
+- from: Cart
+  to: Buyer
+  kind: has_one
+  via: buyer
+- from: Checkout
+  to: Buyer
+  kind: has_one
+  via: buyer
+- from: Cart
+  to: FulfillmentMethod
+  kind: has_many
+  via: fulfillment.methods
+- from: Checkout
+  to: FulfillmentMethod
+  kind: has_many
+  via: fulfillment.methods
+- from: FulfillmentMethod
+  to: LineItem
+  kind: has_many
+  via: line_item_ids
+- from: Cart
+  to: Discount
+  kind: has_one
+  via: discounts
+- from: Checkout
+  to: Discount
+  kind: has_one
+  via: discounts
+- from: Order
+  to: Checkout
+  kind: belongs_to
+  via: complete_checkout
+  note: >-
+    Inferred from the tool flow (complete_checkout produces the order); no response schema is published
+    that names the linking field.

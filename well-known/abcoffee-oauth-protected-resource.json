@@ -1,0 +1,9 @@
+{
+    "resource": "https://abcoffee.in",
+    "authorization_servers": [
+        "https://shopify.com/authentication/54968025206"
+    ],
+    "bearer_methods_supported": [
+        "header"
+    ]
+}

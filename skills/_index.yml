@@ -1,0 +1,18 @@
+generated: '2026-09-05'
+method: generated
+source: >-
+  Grounded in the live MCP tools/list response saved at mcp/abcoffee-mcp-tools.json (13 tools) and the
+  provider-published agent instructions at https://abcoffee.in/agents.md and /llms.txt. No operation
+  name in these skills was invented; each appears verbatim in that tools/list response.
+note: >-
+  abcoffee publishes no OpenAPI, so these skills are grounded in MCP tool names and their JSON Schema
+  inputSchemas rather than operationIds.
+skills:
+- file: abcoffee-search-and-buy.md
+  name: Search the abcoffee catalog and place an order
+  api: mcp/abcoffee-mcp.yml
+  operations: [search_catalog, get_product, create_cart, update_cart, create_checkout, update_checkout, complete_checkout, cancel_checkout]
+- file: abcoffee-catalog-readonly.md
+  name: Read the abcoffee catalog without transacting
+  api: mcp/abcoffee-mcp.yml
+  operations: [search_catalog, lookup_catalog, get_product]

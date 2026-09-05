@@ -1,0 +1,49 @@
+generated: '2026-09-05'
+method: probed
+source: live tools/call and method probes of https://abcoffee.in/api/ucp/mcp
+format: jsonrpc-2.0
+note: >-
+  abcoffee publishes no error reference and no OpenAPI, so these entries are the error envelopes
+  actually observed on the live MCP endpoint. Errors are JSON-RPC 2.0 error objects, not RFC 9457
+  problem+json, and the HTTP status varies with the error class.
+envelope:
+  location: error
+  fields:
+  - code
+  - message
+  - data
+  example: >-
+    {"jsonrpc":"2.0","id":10,"error":{"code":-32000,"message":"AuthenticationRequired",
+    "data":"Unauthorized: A valid JWT is required to call get_order."}}
+problems:
+- code: -32000
+  http_status: 403
+  title: AuthenticationRequired
+  description: >-
+    The tool requires an authenticated caller. Observed on tools/call for get_order with no bearer
+    token; the data field names the tool and links to Shopify's agent authentication guide.
+  remediation: >-
+    Obtain a Shopify agent JWT per https://shopify.dev/docs/agents/get-started/authentication and send
+    it as a bearer token.
+  observed_on: 'tools/call name=get_order'
+- code: -32001
+  http_status: 422
+  title: UCP discovery failed
+  data_code: invalid_profile_url
+  description: >-
+    The request did not carry a resolvable UCP agent profile. Observed for any method called without
+    meta["ucp-agent"].profile, including prompts/list, resources/list and unknown methods; the data
+    object carries a continue_url pointing at the merchant storefront
+    (https://abcoffeeeindia.myshopify.com/).
+  remediation: >-
+    Publish a UCP agent profile and pass its URI in meta["ucp-agent"].profile on every call.
+  observed_on: ['prompts/list', 'resources/list', 'unknown methods', 'tools/call without meta']
+- code: null
+  http_status: 429
+  title: Rate limited
+  description: >-
+    Documented rather than observed - llms.txt states the MCP endpoint is rate-limited per IP and that
+    agents must back off on 429.
+  remediation: Back off and retry with exponential delay.
+  source: https://abcoffee.in/llms.txt
+  observed: false

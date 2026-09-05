@@ -64,5 +64,27 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Abcoffee is a company surfaced via the API Evangelist harvest backlog (source: secondary-market) and added to the network as a stub for full-pipeline profiling.
+abcoffee (abCoffee) is a Mumbai-founded, tech-enabled grab-and-go specialty coffee chain running 90+
+kiosk, high-street and corporate outlets across Mumbai, Delhi-NCR and Bengaluru. It runs no developer
+program and publishes no OpenAPI — but its storefront does publish a real, live agentic-commerce
+surface, and that is what this profile captures.
+
+**What was found (probed 2026-09-05):**
+
+- **A live MCP server at the company's own domain** — `https://abcoffee.in/api/ucp/mcp` answers
+  `initialize` and `tools/list` anonymously (HTTP 200) with **13 tools** and full JSON Schema 2020-12
+  input schemas, saved verbatim to `mcp/abcoffee-mcp-tools.json`.
+- **A Universal Commerce Protocol merchant profile** at `/.well-known/ucp` declaring UCP `2026-08-25`
+  (plus `2026-04-08` and `2026-01-23`), the shopping capabilities, and the store's payment handlers.
+- **Agent instructions** published at `/llms.txt` and `/agents.md`, and listed in
+  `sitemap_agentic_discovery.xml`.
+- **OpenID Connect, RFC 8414 and RFC 9728 discovery documents** served at `abcoffee.in`, pointing at
+  the Shopify Customer Account authorization server hosted for this store.
+- **Idempotency is partial** — `meta["idempotency-key"]` is required on `complete_checkout` and on no
+  other tool; six other mutating tools declare none.
+- **No** OpenAPI, A2A agent card, `security.txt`, `apis.json`, status page, changelog, SDK, CLI or
+  trust center was found on any host probed.
+
+- https://abcoffee.in
+- https://abcoffee.in/agents.md
 - https://equityzen.com/company/abcoffee
