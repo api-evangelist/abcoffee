@@ -64,27 +64,116 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-abcoffee (abCoffee) is a Mumbai-founded, tech-enabled grab-and-go specialty coffee chain running 90+
-kiosk, high-street and corporate outlets across Mumbai, Delhi-NCR and Bengaluru. It runs no developer
-program and publishes no OpenAPI — but its storefront does publish a real, live agentic-commerce
-surface, and that is what this profile captures.
+abcoffee (abCoffee, legally AB Coffee India) is a Mumbai-founded, tech-enabled grab-and-go specialty coffee chain operating 90+ kiosk, high-street and corporate outlets across Mumbai, Delhi-NCR and Bengaluru. Founded in 2022 by Abhijeet Anand, the company sources beans directly from Indian growing regions such as Chikmagalur and sells through its own takeaway mobile app and subscription ecosystem alongside its stores. Its public machine-readable surface is not a developer API program but an agentic-commerce one - the abcoffee.in storefront runs on Shopify and publishes an llms.txt/agents.md agent instruction document, a Universal Commerce Protocol (UCP) merchant profile at /.well-known/ucp, OpenID Connect and OAuth 2.0 discovery metadata for Shopify Customer Accounts, and a live, anonymously-listable MCP endpoint at /api/ucp/mcp exposing 13 catalog, cart, checkout and order tools.
 
-**What was found (probed 2026-09-05):**
+**Areas:** Company · Coffee · Food and Beverage · Retail · Commerce · Agentic Commerce · MCP · Universal Commerce Protocol · Shopify · India · Subscription
 
-- **A live MCP server at the company's own domain** — `https://abcoffee.in/api/ucp/mcp` answers
-  `initialize` and `tools/list` anonymously (HTTP 200) with **13 tools** and full JSON Schema 2020-12
-  input schemas, saved verbatim to `mcp/abcoffee-mcp-tools.json`.
-- **A Universal Commerce Protocol merchant profile** at `/.well-known/ucp` declaring UCP `2026-08-25`
-  (plus `2026-04-08` and `2026-01-23`), the shopping capabilities, and the store's payment handlers.
-- **Agent instructions** published at `/llms.txt` and `/agents.md`, and listed in
-  `sitemap_agentic_discovery.xml`.
-- **OpenID Connect, RFC 8414 and RFC 9728 discovery documents** served at `abcoffee.in`, pointing at
-  the Shopify Customer Account authorization server hosted for this store.
-- **Idempotency is partial** — `meta["idempotency-key"]` is required on `complete_checkout` and on no
-  other tool; six other mutating tools declare none.
-- **No** OpenAPI, A2A agent card, `security.txt`, `apis.json`, status page, changelog, SDK, CLI or
-  trust center was found on any host probed.
+## Abcoffee on APIs.io
 
-- https://abcoffee.in
-- https://abcoffee.in/agents.md
-- https://equityzen.com/company/abcoffee
+Everything profiled for Abcoffee is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/abcoffee/](https://apis.io/providers/abcoffee/)** — or go straight to one of the APIs or properties below.
+
+### APIs (1)
+
+- [abcoffee Agentic Commerce (UCP over MCP)](https://apis.io/apis/abcoffee/abcoffee-agentic-commerce-ucp-over-mcp/) — The agent-facing commerce surface of the abcoffee online store. Implemented as Shopify's native Universal Commerce Protocol (UCP) service and exposed over…
+
+### Published properties
+
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
+
+#### MCP servers (1)
+
+Model Context Protocol servers that expose the API to agents.
+
+- [universal-commerce](https://apis.io/servers/abcoffee/universal-commerce/)
+
+#### Security (2)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Abcoffee Authentication](https://apis.io/security/abcoffee/abcoffee-authentication/)
+- [Abcoffee Domain Security](https://apis.io/security/abcoffee/abcoffee-domain-security/)
+
+#### OAuth scopes (1)
+
+The permissions the API asks for.
+
+- [Abcoffee Scopes](https://apis.io/scopes/abcoffee/abcoffee-scopes/)
+
+#### Plans and pricing (1)
+
+Published plans, tiers and prices.
+
+- [Abcoffee Plans Pricing](https://apis.io/plans/abcoffee/abcoffee-plans-pricing/)
+
+#### Rate limits (1)
+
+Published request limits.
+
+- [Abcoffee Rate Limits](https://apis.io/rate-limits/abcoffee/abcoffee-rate-limits/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://abcoffee.in)
+- [Documentation](https://abcoffee.in/agents.md)
+- [Sign up](https://abcoffee.in/account/login)
+- [Support](https://abcoffee.in/pages/contact)
+- [Blog](https://abcoffee.in/blogs/news)
+- [Terms of service](https://abcoffee.in/policies/terms-of-service)
+- [Privacy policy](https://abcoffee.in/policies/privacy-policy)
+
+## API Evangelist rating
+
+**Kin Score 25.5** — emerging · rubric 0.25.0 · scored 2026-10-23
+
+| Facet | Score |
+|---|---|
+| Discoverability | 75.0 |
+| Contract quality | 0.0 |
+| Contract governance | 18.2 |
+| Operational transparency | 0.0 |
+| Developer ergonomics | 30.4 |
+| Access clarity | 34.2 |
+
+**Agent readiness 27.0** — agent-aware
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | — |
+| Agentic Access | — |
+| Reversibility Documented | — |
+| MCP Server | platform (partial credit) |
+| Auth Clarity | served (partial credit) |
+| Idempotency | documented (partial credit) |
+| Error Semantics | documented (partial credit) |
+| OpenAPI Examples | — |
+| Rate Limit Signal | documented (partial credit) |
+| Event Surface Described | — |
+| Agent Skills | derived (partial credit) |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | served (partial credit) |
+| Protected Resource Metadata | verified |
+| Dynamic Client Registration | — |
+| Agentic Commerce | platform (partial credit) |
+| Pagination Ratio | na |
+| Operation Distinctiveness | na |
+
+**Regulatory alignment 34.3** — Horizontal (data, software, accessibility, platform)
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/abcoffee/](https://apis.io/providers/abcoffee/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Abcoffee: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/abcoffee/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
